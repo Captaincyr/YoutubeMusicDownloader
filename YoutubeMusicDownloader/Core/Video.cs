@@ -44,8 +44,9 @@ namespace Core
 
                 Downloaded = true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 Downloaded = false;
             }
 
@@ -61,12 +62,15 @@ namespace Core
             {
                 string outputAudioFile = outputPath + @"\" + MetaData.FullName.Replace(".mp4", ".mp3");
 
+                Console.WriteLine(Directory.GetCurrentDirectory());
+
                 IConversionResult result = await Conversion.ExtractAudio(VideoFilePath, outputAudioFile).Start();
 
                 ConvertedToMp3 = result.Success;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 ConvertedToMp3 = false;
             }
 

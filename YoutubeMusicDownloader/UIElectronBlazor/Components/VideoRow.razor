@@ -1,0 +1,48 @@
+﻿@using Core;
+@using Core.Configuration;
+
+<tr>
+    <td>@Video.MetaData.Title</td>
+    <td>@Video.Url</td>
+    <td>
+        @if (downloading)
+        {
+            <i class="fas fa-spinner fa-spin"></i>
+        }
+        else if (Video.Downloaded)
+        {
+            <i class="fas fa-check"></i>
+        }
+        else
+        {
+            <a class="btn btn-outline-primary" href="#" role="button" @onclick="Download">Download</a>
+        }
+    </td>
+    <td>
+        <a class="btn btn-outline-primary" href="#" role="button" @onclick="Delete">Delete</a>
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public Video Video { get; set; }
+
+    [Parameter]
+    public VideoList Parent { get; set; }
+
+    private bool downloading = false;
+
+    private async Task Download()
+    {
+        downloading = true;
+        Task<Video> taskDownload = Video.Download(ConfigurationManager.Config.FileOutputPath);
+        Video videoDownloaded = await taskDownload;
+        await videoDownloaded.ConvertToMp3(ConfigurationManager.Config.FileOutputPath);
+        downloading = false;
+    }
+
+    private void Delete()
+    {
+        Parent.DeleteVideo(Video);
+    }
+}

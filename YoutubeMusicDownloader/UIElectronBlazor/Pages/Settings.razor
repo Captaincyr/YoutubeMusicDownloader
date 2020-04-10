@@ -1,0 +1,43 @@
+﻿@page "/Settings"
+@using Core
+@using Core.Configuration;
+@inject NavigationManager NavigationManager;
+
+<a href="/">Back</a>
+
+<div class="form-group">
+    <label for="FileOutputPath">File output path</label>
+    <input type="text" class="form-control" id="FileOutputPath" @bind-value="fileOutputPath">
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" id="DeleteMp4FileAfterConversion" @bind="deleteMp4FileAfterConversion">
+    <label class="form-check-label" for="DeleteMp4FileAfterConversion">
+        Delete mp4 file after conversion
+    </label>
+</div>
+
+<button type="button" class="btn btn-primary" @onclick="Save">Save</button>
+
+
+@code {
+    private string fileOutputPath;
+    private bool deleteMp4FileAfterConversion;
+
+    protected override void OnInitialized()
+    {
+        fileOutputPath = ConfigurationManager.Config.FileOutputPath;
+        deleteMp4FileAfterConversion = ConfigurationManager.Config.DeleteMp4FilesAfterConversion;
+    }
+
+    private async Task Save()
+    {
+        ConfigurationManager.Config.FileOutputPath = fileOutputPath;
+        ConfigurationManager.Config.DeleteMp4FilesAfterConversion = deleteMp4FileAfterConversion;
+
+        await ConfigurationManager.Save();
+
+        NavigationManager.NavigateTo("/");
+    }
+}
+

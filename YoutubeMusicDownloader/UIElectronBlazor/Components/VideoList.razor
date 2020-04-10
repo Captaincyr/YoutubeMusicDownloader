@@ -1,0 +1,46 @@
+﻿@using Core
+@using UIElectronBlazor.Components
+
+<div class="form-group">
+    <label for="UrlVideo">Url</label>
+    <input type="text" class="form-control" id="UrlVideo" @bind-value="UrlVideo">
+</div>
+<button type="button" class="btn btn-outline-primary" @onclick="AddVideo">Add</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Lien</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Video video in videos)
+        {
+            <VideoRow Video="video" Parent="this"></VideoRow>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Video> videos;
+    private string UrlVideo;
+
+    protected override void OnInitialized()
+    {
+        videos = new List<Video>();
+    }
+
+    private void AddVideo()
+    {
+        videos.Add(new Video(UrlVideo));
+    }
+
+    public void DeleteVideo(Video video)
+    {
+        videos.Remove(video);
+        StateHasChanged();
+    }
+}
